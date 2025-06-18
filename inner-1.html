@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Inner Page 1</title>
+</head>
+
+<body>
+    <h1>Inner Page 1</h1>
+    <a href="inner-2.html">Go to Inner Page 2</a>
+    <p>Persistent counter: <span id="counter"></span></p>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            padding: 20px;
+            background-color: #f4f4f4;
+        }
+    </style>
+
+    <script>
+        // Access the parent window's data object
+        const sharedData = window.parent.persistentData;
+
+        // Initialize or increment the counter
+        if (typeof sharedData.counter === 'undefined') {
+            sharedData.counter = 0;
+        }
+        sharedData.counter++;
+
+        // Display the counter
+        document.getElementById('counter').textContent = sharedData.counter;
+    </script>
+</body>
+
+</html>
