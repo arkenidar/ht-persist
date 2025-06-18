@@ -23,20 +23,32 @@
 </head>
 
 <body>
-    <iframe src="inner-1.html"></iframe>
+    <iframe src="about:blank"></iframe>
     <script>
         window.persistentData = {}; // Shared data object
 
         const iframe = document.querySelector('iframe');
 
         function updateParent() {
+            if (iframe.contentWindow.location.href === 'about:blank') {
+                return;
+            }
             // Update title
             parent.document.title = iframe.contentWindow.document.title;
 
-            // Update URL hash
-            const iframePath = iframe.contentWindow.location.pathname + iframe.contentWindow.location.search;
-            const newHash = iframePath.startsWith('/') ? iframePath.substring(1) : iframePath;
-            if ('#' + newHash !== window.location.hash) {
+            // Update URL hash with relative path
+            const iframeFullPath = iframe.contentWindow.location.pathname + iframe.contentWindow.location.search;
+            const parentDir = window.location.pathname.substring(0, window.location.pathname.lastIndexOf('/'));
+            let relativePath = iframeFullPath;
+            if (relativePath.startsWith(parentDir)) {
+                relativePath = relativePath.substring(parentDir.length);
+            }
+            if (relativePath.startsWith('/')) {
+                relativePath = relativePath.substring(1);
+            }
+
+            const newHash = relativePath;
+            if (newHash && '#' + newHash !== window.location.hash) {
                 history.pushState({ path: newHash }, '', '#' + newHash);
             }
         }
@@ -44,9 +56,23 @@
         function updateIframe() {
             const newSrc = window.location.hash.substring(1);
             if (newSrc) {
-                const iframePath = iframe.contentWindow.location.pathname + iframe.contentWindow.location.search;
-                const currentSrc = iframePath.startsWith('/') ? iframePath.substring(1) : iframePath;
-                if (newSrc !== currentSrc) {
+                if (iframe.src.endsWith('about:blank')) {
+                    iframe.src = newSrc;
+                    return;
+                }
+
+                // Get current iframe relative path to avoid loops
+                const iframeFullPath = iframe.contentWindow.location.pathname + iframe.contentWindow.location.search;
+                const parentDir = window.location.pathname.substring(0, window.location.pathname.lastIndexOf('/'));
+                let currentRelativePath = iframeFullPath;
+                if (currentRelativePath.startsWith(parentDir)) {
+                    currentRelativePath = currentRelativePath.substring(parentDir.length);
+                }
+                if (currentRelativePath.startsWith('/')) {
+                    currentRelativePath = currentRelativePath.substring(1);
+                }
+
+                if (newSrc !== currentRelativePath) {
                     iframe.src = newSrc;
                 }
             }
@@ -55,6 +81,9 @@
         iframe.onload = function () {
             updateParent();
 
+            if (iframe.contentWindow.location.href === 'about:blank') {
+                return;
+            }
             const iframeDoc = iframe.contentWindow.document;
             // Use event delegation to handle clicks on links
             iframeDoc.addEventListener('click', function (event) {
@@ -76,11 +105,9 @@
         if (window.location.hash) {
             updateIframe();
         } else {
-            // Set initial hash from iframe src attribute
-            const initialSrc = iframe.getAttribute('src');
-            if (initialSrc) {
-                history.replaceState({ path: initialSrc }, '', '#' + initialSrc);
-            }
+            const initialSrc = 'inner-1.html';
+            history.replaceState({ path: initialSrc }, '', '#' + initialSrc);
+            iframe.src = initialSrc;
         }
     </script>
 </body>
