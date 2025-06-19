@@ -15,8 +15,8 @@
     <script id="template" type="text/ractive">
         <h1>Shopping Cart</h1>
         {{#if cart && cart.length > 0}}
-            {{#each cart}}
-                <div>{{name}} - ${{price}}</div>
+            {{#each cart : index}}
+                <div>{{name}} - ${{price}} - <button on-click="@.splice('cart', index, 1)">Remove</button></div>
             {{/each}}
             <p>Total: ${{total}}</p>
         {{else}}
@@ -26,7 +26,7 @@
     </script>
 
     <script>
-        window.parent.ractive = new Ractive({
+        var ractive = new Ractive({
             target: '#ractive-container',
             template: '#template',
             data: window.parent.persistentData,
@@ -38,6 +38,8 @@
                 }
             }
         });
+
+        window.parent.ractive = ractive;
     </script>
 
     <hr>
