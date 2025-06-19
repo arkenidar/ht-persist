@@ -8,26 +8,36 @@
 </head>
 
 <body>
-    <h1>Shopping Cart</h1>
-    <div id="cart-items"></div>
-    <p>Total: $<span id="cart-total">0</span></p>
-    <p><a href="product-1.html">Back to Products</a></p>
+    <div id="ractive-container"></div>
+
+    <script src="https://unpkg.com/ractive"></script>
+
+    <script id="template" type="text/ractive">
+        <h1>Shopping Cart</h1>
+        {{#if cart && cart.length > 0}}
+            {{#each cart}}
+                <div>{{name}} - ${{price}}</div>
+            {{/each}}
+            <p>Total: ${{total}}</p>
+        {{else}}
+            <p>Your cart is empty.</p>
+        {{/if}}
+        <p><a href="product-1.html">Back to Products</a></p>
+    </script>
 
     <script>
-        const sharedData = window.parent.persistentData;
-        const cartItemsDiv = document.getElementById('cart-items');
-        const cartTotalSpan = document.getElementById('cart-total');
-
-        let total = 0;
-        if (sharedData.cart && sharedData.cart.length > 0) {
-            sharedData.cart.forEach(item => {
-                const itemDiv = document.createElement('div');
-                itemDiv.textContent = `${item.name} - $${item.price}`;
-                cartItemsDiv.appendChild(itemDiv);
-                total += item.price;
-            });
-        }
-        cartTotalSpan.textContent = total;
+        var ractive = new Ractive({
+            target: '#ractive-container',
+            template: '#template',
+            data: window.parent.persistentData,
+            computed: {
+                total() {
+                    const cart = this.get('cart');
+                    if (!cart) return 0;
+                    return cart.reduce((total, item) => total + item.price, 0);
+                }
+            }
+        });
     </script>
 </body>
 
