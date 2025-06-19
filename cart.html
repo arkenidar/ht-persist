@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shopping Cart</title>
+</head>
+
+<body>
+    <h1>Shopping Cart</h1>
+    <div id="cart-items"></div>
+    <p>Total: $<span id="cart-total">0</span></p>
+    <p><a href="product-1.html">Back to Products</a></p>
+
+    <script>
+        const sharedData = window.parent.persistentData;
+        const cartItemsDiv = document.getElementById('cart-items');
+        const cartTotalSpan = document.getElementById('cart-total');
+
+        let total = 0;
+        if (sharedData.cart && sharedData.cart.length > 0) {
+            sharedData.cart.forEach(item => {
+                const itemDiv = document.createElement('div');
+                itemDiv.textContent = `${item.name} - $${item.price}`;
+                cartItemsDiv.appendChild(itemDiv);
+                total += item.price;
+            });
+        }
+        cartTotalSpan.textContent = total;
+    </script>
+</body>
+
+</html>
