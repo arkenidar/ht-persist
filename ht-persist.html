@@ -105,7 +105,7 @@
         if (window.location.hash) {
             updateIframe();
         } else {
-            const initialSrc = 'cart.html';
+            const initialSrc = 'initial.html';
             history.replaceState({ path: initialSrc }, '', '#' + initialSrc);
             iframe.src = initialSrc;
         }
