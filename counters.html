@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>counters</title>
+</head>
+
+<body>
+
+    <h1>Counters</h1>
+    <p>Counters Example adaptation for showing enabled "ht-persistence" from basic original work <a
+            href="https://arkenidar.github.io/exercises_in_js_html/beginner/counters.html">https://arkenidar.github.io/exercises_in_js_html/beginner/counters.html</a>
+        that was prototyped in GitHub(repo="arkenidar/editor") .</p>
+    <p>Two independent counters, with persistent data option.</p>
+    <p>Persist with
+        <a href="https://github.com/arkenidar/ht-persist">github.com/arkenidar/ht-persist</a> .
+    </p>
+    <p>Like applied also in
+        <a href="https://arkenidar.github.io/editor/ht-persist.html#editor.html">github.com/arkenidar/editor</a> .
+    </p>
+
+    <p>const data_switch = false // false for persistent data</p>
+    <p>iframe.contentWindow.location.href='counters.html'</p>
+    <p><a href="initial.html">initial.html</a> - initial page</p>
+
+    <hr>
+    <button id="counter1" onclick="times_increment(this)">click me!</button>
+    <button onclick="times_set(counter1,0)">reset</button>
+    <hr>
+    <button id="counter2" onclick="times_increment(this)">click me!</button>
+    <button onclick="times_set(counter2,0)">reset</button>
+
+    <script>
+        const data_switch = false // false for persistent data
+        const data = data_switch ? window : parent.persistentData
+
+        function times_increment(counter) {
+            data.counter_times[counter.id] += 1;
+            times_set(counter)
+        }
+
+        function times_set(counter, times = null) {
+            if (times != null) data.counter_times[counter.id] = times
+            var s = data.counter_times[counter.id] != 1 ? "s" : ""
+            counter.textContent = "click me! clicked " + data.counter_times[counter.id] + " time" + s
+        }
+
+        function times_init(counter) {
+            if (typeof data.counter_times == "undefined")
+                data.counter_times = {}
+            if (typeof data.counter_times[counter.id] == "undefined")
+                times_set(counter, 0)
+            times_set(counter)
+        }
+
+        function init() {
+
+            times_init(counter1)
+            times_init(counter2)
+
+        }
+
+        init()
+    </script>
+
+    <hr>
+    <script src="/exercises_in_js_html/libs/show-source.js/show-source.js"></script>
+</body>
+
+</html>
