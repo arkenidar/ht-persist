@@ -8,11 +8,27 @@
 </head>
 
 <body>
+    <h1>ht-persist examples</h1>
+    <p>This is the initial page. You can navigate to the examples below.</p>
+
+    <h2>examples / applications</h2>
     <ul>
         <li><a href="inner-1.html">inner-1.html</a> - inner page 1 (iframe)</li>
-        <li><a href="cart.html">cart.html</a> - shopping cart example</li>
-        <li><a href="counters.html">counters.html</a> - two independent counters, with persistent data option</li>
+        <li><a href="cart.html">cart.html</a> - shopping cart example (iframe)</li>
+        <li><a href="counters.html">counters.html</a>
+            - two independent counters, with persistent data option (iframe)
+        </li>
     </ul>
+    <p>Note: The examples use iframes to demonstrate the functionality of ht-persist.</p>
+
+    <h2>core pages (not examples) </h2>
+    <button
+        onclick="parent.location.href='/editor/ht-persist.html#editor.html'">parent.location.href='/editor/ht-persist.html#editor.html'</button>
+    <ul>
+        <li><a target="_blank" href="https://github.com/arkenidar/editor">editor.html (project)</a></li>
+        <li><a target="_blank" href="https://github.com/arkenidar/ht-persist">ht-persist.html (project)</a></li>
+    </ul>
+
 </body>
 
 </html>
